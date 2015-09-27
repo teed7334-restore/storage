@@ -1,5 +1,5 @@
 # Storage
-A light process array toolkit, you can process join, order, find, write file on array
+A light process array toolkit, you can process join, order, find, write into file from array
 
 #### [Directory Structure]
 base - class files
