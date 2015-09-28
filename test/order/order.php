@@ -1,5 +1,8 @@
 <?php
-include_once('../../order.php');
+include_once('../../config/config_setting.php');
+$config    = config_setting::get_config();
+$base_path = $config['base_path'];
+include_once("{$base_path}/order.php");
 $order = new order();
 $data = array(
     array('id' => 1, 'name' => 'Peter', 'address' => 'AAAA', 'pay' => '100', 'date' => '2015-09-27 23:00:00'),

@@ -1,18 +1,22 @@
 <?php
 class index {
 
+    public $database;
     public $file;
     public $find;
     public $join;
+    public $mmcache;
     public $order;
     public $paging;
 
     public function __construct() {
-        $this->file   = NULL;
-        $this->find   = NULL;
-        $this->join   = NULL;
-        $this->order  = NULL;
-        $this->paging = NULL;
+        $this->database = NULL;
+        $this->file     = NULL;
+        $this->find     = NULL;
+        $this->join     = NULL;
+        $this->mmcache  = NULL;
+        $this->order    = NULL;
+        $this->paging   = NULL;
     }
 
     public function load($library = '') {
@@ -23,10 +27,11 @@ class index {
         if(FALSE === $library)
             return FALSE;
 
-        include_once('config/setting.php');
+        include_once('config/config_setting.php');
 
         if(NULL === $this->{$library}) {
-            global $base_path;
+            $config    = config_setting::get_config();
+            $base_path = $config['base_path'];
             include_once("{$base_path}/{$library}.php");
             $command = "\$this->{$library} = new {$library}();";
             eval($command);

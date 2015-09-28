@@ -33,9 +33,9 @@ class file {
         if(FALSE === $filename)
             return FALSE;
 
-        include_once('../../config/setting.php');
-
-        global $cache_path;
+        include_once('../../config/config_setting.php');
+        $cache_path = config_setting::get_config();
+        $cache_path = $cache_path['cache_path'];
 
         $this->filename = "{$cache_path}/{$filename}";
         $fp   = fopen($this->filename, 'a+');

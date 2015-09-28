@@ -1,5 +1,7 @@
 <?php
-include_once('../config/setting.php');
+include_once('../config/config_setting.php');
+$config    = config_setting::get_config();
+$main_path = $config['main_path'];
 include_once("{$main_path}/index.php");
 $storage = new index();
 $storage->load('join');

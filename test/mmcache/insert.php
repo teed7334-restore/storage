@@ -2,16 +2,11 @@
 include_once('../../config/config_setting.php');
 $config    = config_setting::get_config();
 $base_path = $config['base_path'];
-include_once("{$base_path}/join.php");
-$join = new join();
-$customer = array(
-    array('id' => 1, 'name' => 'Peter', 'address' => 'AAAA', 'mobile' => '0900123456'),
-    array('id' => 2, 'name' => 'Bill', 'address' => 'BBBB', 'mobile' => '0910123456'),
-    array('id' => 3, 'name' => 'Ryan', 'address' => 'CCCC', 'mobile' => '0920123456'),
-    array('id' => 4, 'name' => 'Chris', 'address' => 'DDDD', 'mobile' => '0930123456'),
-    array('id' => 5, 'name' => 'John', 'address' => 'EEEE', 'mobile' => '0940123456'),
-);
-$order = array(
+include_once("{$base_path}/mmcache.php");
+$memcache = new mmcache();
+$expire   = 86400;
+$key      = 'order';
+$order    = array(
     array('id' => 1, 'customer_id' => 1, 'order_no' => 'A123456789'),
     array('id' => 2, 'customer_id' => 2, 'order_no' => 'B123456789'),
     array('id' => 3, 'customer_id' => 3, 'order_no' => 'C123456789'),
@@ -23,6 +18,5 @@ $order = array(
     array('id' => 9, 'customer_id' => 8, 'order_no' => 'I123456789'),
     array('id' => 10, 'customer_id' => 9, 'order_no' => 'J123456789'),
 );
-$table_name = array('customer' => 'order');
-$join->set_table_name($table_name);
-print_r($join->cross_join($customer, $order));
+$memcache->set_expire($expire);
+print_r($memcache->insert($key, $order));
