@@ -13,6 +13,29 @@ class mmcache {
         $this->_start_service();
     }
 
+    public function get_adapter() {
+        return $this->adapter;
+    }
+
+    public function add_server($host = '', $port = 11211, $key = 'custom', $timeout = 1) {
+        $host    = (FALSE === empty($host)) ? $host          : FALSE;
+        $port    = (0 < (int) $port)        ? (int) $port    : FALSE;
+        $key     = (FALSE === empty($key))  ? $key           : FALSE;
+        $timeout = (0 < (int) $timeout)     ? (int) $timeout : FALSE;
+
+        if(FALSE === $host || FALSE === $port || FALSE === $key || FALSE === $timeout)
+            return FALSE;
+
+        $fp = @fsockopen($host, $port, $errno, $errstr, $timeout);
+
+        if(FALSE === $fp)
+            return FALSE;
+
+        $connect = new Memcache();
+        $connect->connect($host, $port);
+        $this->adapter[$key][] = $connect;
+    }
+
     private function _clear() {
         $this->expire     = 60;
         $this->compressed = FALSE;
@@ -20,7 +43,8 @@ class mmcache {
     }
 
     private function _load_config() {
-        include_once('../../config/config_setting.php');
+        if(TRUE === empty(config_setting::get_config()))
+            include_once('../../config/config_setting.php');
         $config_path = config_setting::get_config();
         $config_path = $config_path['config_path'];
         include_once("{$config_path}/config_memcache.php");
@@ -38,9 +62,14 @@ class mmcache {
 
         foreach($type as $t)
             foreach($connect[$t] as $config) {
-                $memcache = new Memcache();
-                $memcache->connect($config['host'], $config['port']);
-                $this->adapter[$t][] = $memcache;
+
+                $fp = @fsockopen($config['host'], $config['port'], $errno, $errstr, $config['timeout']);
+
+                if(FALSE !== $fp) {
+                    $memcache = new Memcache();
+                    $memcache->connect($config['host'], $config['port']);
+                    $this->adapter[$t][] = $memcache;
+                }
             }
     }
 
@@ -57,7 +86,7 @@ class mmcache {
             $memcache->flush();
     }
 
-    public function search($key = '') {
+    public function get($key = '') {
 
         if(TRUE === empty($this->adapter['memcache']) || TRUE === empty($key) || 0 ===(int) $this->expire)
             return FALSE;
@@ -72,7 +101,7 @@ class mmcache {
         return FALSE;
     }
 
-    public function update($key = '', $value = '') {
+    public function set($key = '', $value = '') {
 
         if(TRUE === empty($this->adapter['memcache']) || TRUE === empty($key) || TRUE === empty($value) || 0 === (int) $this->expire)
             return FALSE;
@@ -85,7 +114,7 @@ class mmcache {
         return $status;
     }
 
-    public function insert($key = '', $value = '') {
+    public function add($key = '', $value = '') {
 
         if(TRUE === empty($this->adapter['memcache']) || TRUE === empty($key) || TRUE === empty($value) || 0 === (int) $this->expire)
             return FALSE;
@@ -98,7 +127,7 @@ class mmcache {
         return $status;
     }
 
-    public function remove($key = '') {
+    public function delete($key = '') {
 
         if(TRUE === empty($this->adapter['memcache']) || TRUE === empty($key) || 0 > (int) $this->expire)
             return FALSE;

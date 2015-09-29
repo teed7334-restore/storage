@@ -5,4 +5,4 @@ $base_path = $config['base_path'];
 include_once("{$base_path}/mmcache.php");
 $memcache = new mmcache();
 $key      = 'order';
-print_r($memcache->remove($key));
+print_r($memcache->get($key));

@@ -5,10 +5,11 @@ class config_memcache {
         $connect = array();
 
         //Memcache
-        $type                         = 'memcache';
-        $i                            = 0;
-        $connect[$type][$i]['host']   = '127.0.0.1';
-        $connect[$type][$i]['port']   = 11211;
+        $type                          = 'memcache';
+        $i                             = 0;
+        $connect[$type][$i]['host']    = '127.0.0.1';
+        $connect[$type][$i]['port']    = 11211;
+        $connect[$type][$i]['timeout'] = 1;
 
         return $connect;
     }

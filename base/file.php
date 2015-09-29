@@ -33,7 +33,7 @@ class file {
         if(FALSE === $filename)
             return FALSE;
 
-        include_once('../../config/config_setting.php');
+        $this->_load_config();
         $cache_path = config_setting::get_config();
         $cache_path = $cache_path['cache_path'];
 
@@ -45,6 +45,11 @@ class file {
 
         $this->fp = $fp;
 
+    }
+
+    private function _load_config() {
+        if(TRUE === empty(config_setting::get_config()))
+            include_once('../../config/config_setting.php');
     }
 
     public function load() {

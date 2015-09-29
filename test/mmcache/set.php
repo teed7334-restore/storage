@@ -19,4 +19,4 @@ $order    = array(
     array('id' => 1, 'customer_id' => 9, 'order_no' => 'J123456789'),
 );
 $memcache->set_expire($expire);
-print_r($memcache->update($key, $order));
+print_r($memcache->set($key, $order));

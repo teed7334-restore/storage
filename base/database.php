@@ -14,15 +14,37 @@ class database {
         $this->_start_service();
     }
 
+    public function get_adapter() {
+        return $this->adapter;
+    }
+
+    public function add_server($use = '', $host = '', $user = '', $password = '', $database = '', $charset = '', $name = 'custom') {
+        $use      = (FALSE === empty($use))      ? $use                 : FALSE;
+        $host     = (FALSE === empty($host))     ? $host                : FALSE;
+        $user     = (FALSE === empty($user))     ? $user                : FALSE;
+        $password = (FALSE === empty($password)) ? $password            : FALSE;
+        $database = (FALSE === empty($database)) ? $database            : FALSE;
+        $name     = (FALSE === empty($name))     ? $name                : FALSE;
+        $charset  = (FALSE === empty($charset))  ? "charset={$charset}" : '';
+
+        if(FALSE === $use || FALSE === $host || FALSE === $user || FALSE === $password || FALSE === $database || FALSE === $name)
+            return FALSE;
+
+        $dsn = "{$use}:host={$host};dbname={$database};{$charset}";
+        $connect = new PDO($dsn, $user, $password);
+        $this->adapter[$name][] = $connect;
+    }
+
     private function _clear() {
-        $this->adapter     = NULL;
-        $this->tables      = NULL;
-        $this->columns     = NULL;
-        $this->roles       = NULL;
+        $this->adapter = NULL;
+        $this->tables  = NULL;
+        $this->columns = NULL;
+        $this->roles   = NULL;
     }
 
     private function _load_config() {
-        include_once('../../config/config_setting.php');
+        if(TRUE === empty(config_setting::get_config()))
+            include_once('../../config/config_setting.php');
         $config_path = config_setting::get_config();
         $config_path = $config_path['config_path'];
         include_once("{$config_path}/config_database.php");
@@ -40,8 +62,9 @@ class database {
 
         foreach($type as $t)
             foreach($connect[$t] as $config) {
-                $dsn             = "{$config['use']}:host={$config['host']};dbname={$config['database']};charset={$config['charset']}";
-                $database        = new PDO($dsn, $config['user'], $config['password']);
+                $charset             = (FALSE === empty($config['charset'])) ? "charset={$config['charset']}" : '';
+                $dsn                 = "{$config['use']}:host={$config['host']};dbname={$config['database']};{$charset}";
+                $database            = new PDO($dsn, $config['user'], $config['password']);
                 $this->adapter[$t][] = $database;
             }
     }
@@ -160,10 +183,10 @@ class database {
         if(TRUE === empty($this->tables) || TRUE === empty($this->columns))
             return FALSE;
 
-        $insert = NULL;
-        $columns   = NULL;
+        $insert  = NULL;
+        $columns = NULL;
         $values  = NULL;
-        $bind   = NULL;
+        $bind    = NULL;
 
         foreach($this->tables as $table)
             $insert = $table;
@@ -218,7 +241,7 @@ class database {
 
     public function read_database($sql = '', $bind = array()) {
 
-        if(TRUE === empty($this->adapter['read']) || TRUE === empty($sql) || TRUE === empty($bind))
+        if(TRUE === empty($this->adapter['read']) || TRUE === empty($sql))
             return FALSE;
 
         $sth  = NULL;
@@ -226,7 +249,10 @@ class database {
 
         foreach($this->adapter['read'] as $database) {
             $sth = $database->prepare($sql);
-            $sth->execute($bind);
+            if(FALSE === empty($bind))
+                $sth->execute($bind);
+            else
+                $sth->execute();
             $data = $sth->fetchAll(PDO::FETCH_ASSOC);
             if(FALSE === empty($data))
                 return $data;
@@ -240,8 +266,8 @@ class database {
         if(TRUE === empty($this->adapter['write']) || TRUE === empty($sql) || TRUE === empty($bind))
             return FALSE;
 
-        $sth  = NULL;
-        $data = NULL;
+        $sth    = NULL;
+        $data   = NULL;
         $status = array();
 
         foreach($this->adapter['write'] as $database) {
@@ -250,5 +276,25 @@ class database {
         }
 
         return $status;
+    }
+
+    public function custom_query($sql = '', $bind = array(), $name = 'custom', $step = 0) {
+
+        if(TRUE === empty($sql) || TRUE === empty($name) || 0 > (int) $step || TRUE === empty($this->adapter[$name]))
+            return FALSE;
+
+        $sth    = NULL;
+        $data   = NULL;
+        $status = NULL;
+
+        $sth = $this->adapter[$name][$step]->prepare($sql);
+
+        if(FALSE === empty($bind))
+            $sth->execute($bind);
+        else
+            $sth->execute();
+
+        return $sth;
+
     }
 }

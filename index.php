@@ -21,7 +21,7 @@ class index {
 
     public function load($library = '') {
 
-        $accept = array('file', 'find', 'join', 'order', 'paging');
+        $accept = array('database', 'file', 'find', 'join', 'mmcache', 'order', 'paging');
         $library = in_array(strtolower($library), $accept) ? strtolower($library) : FALSE;
 
         if(FALSE === $library)

@@ -26,17 +26,19 @@ class join {
 
 				foreach($array as $rows)
 						foreach($rows as $column => $value)
-							if(TRUE === empty($array[0][$column]))
-								return FALSE;
+							  if(FALSE === isset($array[0][$column]))
+								    return FALSE;
 
 				foreach($join as $rows)
 						foreach($rows as $column => $value)
-							if(TRUE === empty($join[0][$column]))
-								return FALSE;
+							  if(FALSE === isset($join[0][$column]))
+								    return FALSE;
 
 				foreach($bind as $role)
 						if(TRUE === empty($role))
 								return FALSE;
+
+				return TRUE;
 		}
 
 		private function _set_bind($bind = array()) {
@@ -127,7 +129,7 @@ class join {
 				$this->_clear();
 
 				if(FALSE === $this->_validate_join_data($array, $join, $bind))
-					return FALSE;
+					  return FALSE;
 
 				$swap = array();
 
