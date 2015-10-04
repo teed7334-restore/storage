@@ -8,6 +8,7 @@ class index {
     public $mmcache;
     public $order;
     public $paging;
+    public $render;
 
     public function __construct() {
         $this->database = NULL;
@@ -17,11 +18,12 @@ class index {
         $this->mmcache  = NULL;
         $this->order    = NULL;
         $this->paging   = NULL;
+        $this->render   = NULL;
     }
 
     public function load($library = '') {
 
-        $accept = array('database', 'file', 'find', 'join', 'mmcache', 'order', 'paging');
+        $accept = array('database', 'file', 'find', 'join', 'mmcache', 'order', 'paging', 'render');
         $library = in_array(strtolower($library), $accept) ? strtolower($library) : FALSE;
 
         if(FALSE === $library)
@@ -33,8 +35,7 @@ class index {
             $config    = config_setting::get_config();
             $base_path = $config['base_path'];
             include_once("{$base_path}/{$library}.php");
-            $command = "\$this->{$library} = new {$library}();";
-            eval($command);
+            $this->{$library} = new $library();
         }
     }
 }
