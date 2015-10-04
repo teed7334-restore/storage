@@ -43,8 +43,10 @@ class database {
     }
 
     private function _load_config() {
-        if(TRUE === empty(config_setting::get_config()))
-            include_once('../../config/config_setting.php');
+        if(TRUE === empty(config_setting::get_config())) {
+            $path = dirname(dirname(dirname(__FILE__)));
+            include_once("{$path}/config/config_setting.php");
+        }
         $config_path = config_setting::get_config();
         $config_path = $config_path['config_path'];
         include_once("{$config_path}/config_database.php");
