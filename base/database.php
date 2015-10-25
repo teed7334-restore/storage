@@ -43,7 +43,7 @@ class database {
     }
 
     private function _load_config() {
-        if(TRUE === empty(config_setting::get_config())) {
+        if(FALSE === class_exists('config_setting')) {
             $path = dirname(dirname(dirname(__FILE__)));
             include_once("{$path}/config/config_setting.php");
         }
@@ -104,7 +104,7 @@ class database {
         return $this->roles;
     }
 
-    public function search() {
+    public function get() {
 
         if(TRUE === empty($this->tables) || TRUE === empty($this->columns))
             return FALSE;
@@ -141,7 +141,7 @@ class database {
         return $data;
     }
 
-    public function update() {
+    public function set() {
 
         if(TRUE === empty($this->tables) || TRUE === empty($this->columns))
             return FALSE;
@@ -180,7 +180,7 @@ class database {
         return $status;
     }
 
-    public function insert() {
+    public function add() {
 
         if(TRUE === empty($this->tables) || TRUE === empty($this->columns))
             return FALSE;
@@ -211,7 +211,7 @@ class database {
         return $status;
     }
 
-    public function remove() {
+    public function delete() {
 
         if(TRUE === empty($this->tables))
             return FALSE;
@@ -280,7 +280,7 @@ class database {
         return $status;
     }
 
-    public function custom_query($sql = '', $bind = array(), $name = 'custom', $step = 0) {
+    public function query($sql = '', $bind = array(), $name = 'custom', $step = 0) {
 
         if(TRUE === empty($sql) || TRUE === empty($name) || 0 > (int) $step || TRUE === empty($this->adapter[$name]))
             return FALSE;

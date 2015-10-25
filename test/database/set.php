@@ -6,6 +6,14 @@ include_once("{$base_path}/database.php");
 $database = new database();
 $table  = array('user');
 $column = array(
+  'account'     => 'Hebe',
+  'password'    => '25d55ad283aa400af464c76d713c07ad',
+  'group_id'    => '1000',
+  'home'        => '/home/Hebe',
+  'shell'       => '/bin/bash',
+  'is_disabled' => 0
+);
+$role = array(
     'account'     => 'Selina',
     'password'    => '25d55ad283aa400af464c76d713c07ad',
     'group_id'    => '1000',
@@ -16,4 +24,5 @@ $column = array(
 $key = 'users';
 $database->table($table);
 $database->column($column);
-print_r($database->insert($key));
+$database->role($role);
+print_r($database->set($key));

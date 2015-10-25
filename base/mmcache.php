@@ -43,7 +43,7 @@ class mmcache {
     }
 
     private function _load_config() {
-        if(TRUE === empty(config_setting::get_config())) {
+        if(FALSE === class_exists('config_setting')) {
             $path = dirname(dirname(dirname(__FILE__)));
             include_once("{$path}/config/config_setting.php");
         }
