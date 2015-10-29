@@ -256,8 +256,8 @@ class database {
             else
                 $sth->execute();
             $data = $sth->fetchAll(PDO::FETCH_ASSOC);
-            if(FALSE === empty($data))
-                return $data;
+            if(TRUE === empty($data))
+                return FALSE;
         }
 
         return $data;
@@ -265,7 +265,7 @@ class database {
 
     public function write_database($sql = '', $bind = array()) {
 
-        if(TRUE === empty($this->adapter['write']) || TRUE === empty($sql) || TRUE === empty($bind))
+        if(TRUE === empty($this->adapter['write']) || TRUE === empty($sql))
             return FALSE;
 
         $sth    = NULL;
@@ -278,6 +278,25 @@ class database {
         }
 
         return $status;
+    }
+
+    public function transaction() {
+        foreach($this->adapter['write'] as $database)
+            $database->beginTransaction();
+    }
+
+    public function rollback() {
+        foreach($this->adapter['write'] as $database)
+            $database->rollBack();
+    }
+
+    public function commit() {
+        foreach($this->adapter['write'] as $database)
+            $database->commit();
+    }
+
+    public function last_insert_id($name = '') {
+        return '' === $name ? $this->adapter['write'][0]->lastInsertId() : $this->adapter['write'][0]->lastInsertId($name);
     }
 
     public function query($sql = '', $bind = array(), $name = 'custom', $step = 0) {

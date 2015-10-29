@@ -5,7 +5,7 @@ class index {
 
         include_once('config/config_setting.php');
 
-        if(NULL === $this->{$library}) {
+        if(TRUE === empty($this->{$library})) {
             $this->config('config');
             $config    = $this->config['config_setting'];
             $base_path = $config['base_path'];

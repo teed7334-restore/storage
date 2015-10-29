@@ -49,7 +49,7 @@ function cross_storage_join() {
             $database = 'test';
             $storage->database->add_server($use, $host, $user, $password, $database);
             $sql = "SELECT * FROM ugroup";
-            $pgsql = $storage->database->custom_query($sql);
+            $pgsql = $storage->database->query($sql);
             $pgsql = $pgsql->fetchAll(PDO::FETCH_ASSOC);
 
             //write into memcache
