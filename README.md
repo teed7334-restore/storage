@@ -1,39 +1,35 @@
 # Storage
-A light process storage toolkit
+一個輕量級的陣列處理工具，可以透過它在利用陣列進行Join，及一些框架會有的基本工具包
 
 
-#### [Summary]
-1.You can use inner join, left join, right join, full join, cross join, natural join on array
+#### [特色]
+1.你可以對二個陣列進行inner join, left join, right join, outer join, full join等
 
-2.You can use order by on array
+2.你可以對陣列進行排序，就像SQL的order by一樣
 
-3.You can write into file from join or order by or any data
+3.你可以輕鬆地將處理好的資料寫入檔案
 
-4.You can use pagination from array
+4.你可以對陣列進行分頁
 
-5.You can synchronization write into multiple database
+5.你可以同時寫入多台資料庫，且支持讀寫分離
 
-6.You can synchronization write into multiple memcache
-
-
-#### [Directory Structure]
-base - class files
-
-cache - from array data write into files
-
-config - config files
-
-test - test code files
-
-index.php - main program
+6.你可以同時寫入多台memcache
 
 
-#### [How to use]
-You can see test code in the test directory, You can use "php test/index.php or [any test code]" or on borwser run it
+#### [資料夾結構]
+base - 底層程式資料夾
+
+cache - 供你寫入檔案的資料夾
+
+config - 存放設定資料夾
+
+test - 測試程式資料夾，也可以當使用範例
+
+index.php - 主程式
 
 
-#### [Other]
-Sorry, I english is very bad, So I can't write long long description on this document
+#### [如何使用]
+你可以透過test資料夾中的測試範例去做參考
 
 
 #### [About author]
