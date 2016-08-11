@@ -1,6 +1,7 @@
 # Storage
 一個輕量級的陣列處理工具，可以透過它在利用陣列進行Join，及一些框架會有的基本工具包
 
+它連到資料庫的底層是透過PDO，所以如果您換成不同資料庫，您可以不用改任何底層的程式，只需要改SQL就好
 
 #### [特色]
 1.你可以對二個陣列進行inner join, left join, right join, outer join, full join等
