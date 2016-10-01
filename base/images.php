@@ -81,6 +81,9 @@ class images {
         if('jpeg' === $extension)
             $extension = 'jpg';
 
+        $filename = md5(microtime() . 'slice');
+        $filename = "{$filename}.{$extension}";
+
         foreach($this->config['slice'] as $size => $path) {
             list($width, $height) = explode('-', $size);
             $proportion = $this->height / $this->width;
@@ -106,12 +109,11 @@ class images {
                $width,
                $height
             );
-            $filename = md5(microtime() . 'slice');
-            $filename = "{$filename}.{$extension}";
             $adapter($target, "{$path}/{$filename}", $quality);
         }
 
         imageDestroy($target);
+        return $filename;
     }
 
     public function resize($quality = 100) {
@@ -132,6 +134,9 @@ class images {
         $extension = $this->content_type;
         if('jpeg' === $extension)
             $extension = 'jpg';
+
+        $filename = md5(microtime() . 'resize');
+        $filename = "{$filename}.{$extension}";
 
         foreach($this->config['resize'] as $size => $path) {
             list($width, $height) = explode('-', $size);
@@ -154,12 +159,11 @@ class images {
                $this->width,
                $this->height
             );
-            $filename = md5(microtime() . 'resize');
-            $filename = "{$filename}.{$extension}";
             $adapter($target, "{$path}/{$filename}", $quality);
         }
 
         imageDestroy($target);
+        return $filename;
     }
 
     private function _load_config() {
